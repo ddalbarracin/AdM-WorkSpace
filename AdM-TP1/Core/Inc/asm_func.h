@@ -21,5 +21,9 @@ void asm_mul_esc_32(uint32_t *vectorIn, uint32_t *vectorOut, uint32_t longitud, 
 void asm_mul_esc_16(uint16_t *vectorIn, uint16_t *vectorOut, uint32_t longitud, uint16_t escalar);
 void asm_mul_esc_16_sat(uint16_t *vectorIn, uint16_t *vectorOut, uint32_t longitud, uint16_t escalar);
 uint32_t asm_bitfield_toggle(uint32_t *dato, uint32_t ancho, uint32_t inicio);
+void asm_pack32to16(int32_t * vectorIn, int16_t *vectorOut, uint32_t longitud);
+uint32_t asm_max(int32_t * vectorIn, uint32_t longitud);
+void asm_downSample (int32_t * vectorIn, int32_t * vectorOut, uint32_t longitud, uint32_t N);
+void asm_invertir(uint16_t * vector, uint32_t longitud);
 
 #endif /* INC_ASM_FUNC_H_ */

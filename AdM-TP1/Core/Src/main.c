@@ -68,6 +68,13 @@ void mul_esc_32(uint32_t *vectorIn, uint32_t *vectorOut, uint32_t longitud, uint
 void mul_esc_16(uint16_t *vectorIn, uint16_t *vectorOut, uint32_t longitud, uint16_t escalar);
 void mul_esc_16_sat(uint16_t *vectorIn, uint16_t *vectorOut, uint32_t longitud, uint16_t escalar);
 uint32_t bitfield_toggle(uint32_t *dato, uint32_t ancho, uint32_t inicio);
+
+/* AdM - TP2 */
+void pack32to16(int32_t * vectorIn, int16_t *vectorOut, uint32_t longitud);
+uint32_t max(int32_t *vectorIn, uint32_t longitud);
+void downSample(int32_t * vectorIn, int32_t * vectorOut, uint32_t longitud, uint32_t N);
+void invertir(uint16_t * vector, uint32_t longitud);
+
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -500,6 +507,80 @@ uint32_t bitfield_toggle(uint32_t *dato, uint32_t ancho, uint32_t inicio){
 	return (result);
 
 }
+
+/*
+ * @Func:	pack32to16(int32_t * vectorIn, int16_t *vectorOut, uint32_t longitud)
+ * @Brief:
+ *
+ * @Parameters:
+ * 		int32_t *vectorIn:
+ * 		int16_t *vectorOut:
+ * 		uint32_t longitud:
+ *
+ * @Return:
+ * 		None
+ */
+void pack32to16(int32_t * vectorIn, int16_t *vectorOut, uint32_t longitud){
+
+}
+
+/*
+ * @Func:	max(int32_t *vectorIn, uint32_t longitud)
+ * @Brief:
+ *
+ * @Parameters:
+ * 		int32_t *vectorIn:
+ * 		uint32_t longitud:
+ *
+ * @Return:
+ * 		uint32_t
+ */
+uint32_t max(int32_t *vectorIn, uint32_t longitud){
+
+	uint32_t result = 0;
+
+	return(result);
+
+}
+
+/*
+ * @Func:	downSample(int32_t * vectorIn, int32_t * vectorOut, uint32_t longitud, uint32_t N)
+ * @Brief:
+ *
+ * @Parameters:
+ * 		int32_t *vectorIn:
+ * 		int16_t vectorOut:
+ * 		uint32_t longitud:
+ * 		uint32_t N:
+ *
+ * @Return:
+ * 		None
+ */
+void downSample(int32_t * vectorIn, int32_t * vectorOut, uint32_t longitud, uint32_t N){
+
+
+	return;
+
+}
+
+/*
+ * @Func:	invertir(uint16_t * vector, uint32_t longitud)
+ * @Brief:
+ *
+ * @Parameters:
+ * 		uint16_t *vector:
+ * 		uint32_t longitud:
+ *
+ * @Return:
+ * 		None
+ */
+void invertir(uint16_t * vector, uint32_t longitud){
+
+
+	return;
+
+}
+
 
 /* USER CODE END 4 */
 

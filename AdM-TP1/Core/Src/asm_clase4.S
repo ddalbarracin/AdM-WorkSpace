@@ -76,8 +76,8 @@
 	void asm_zeros(uint32_t * vector, uint32_t longitud)
 
  Parameters:
-	r0: dirección del vector
-	r1: longitud
+	r0: vector address
+	r1: vector lenght
 
  Return: None
  **************************************************************
