@@ -161,7 +161,7 @@ int main(void)
 	int16_t pack_vectorOut[pack_lon];
 
 	asm_pack32to16(asm_pack_vectorIn, asm_pack_vectorOut, pack_lon);
-	asm_pack32to16(pack_vectorIn, pack_vectorOut, pack_lon);
+	pack32to16(pack_vectorIn, pack_vectorOut, pack_lon);
 
 	/* ----------- Función asm_pack32to16 End ----------- */
 
