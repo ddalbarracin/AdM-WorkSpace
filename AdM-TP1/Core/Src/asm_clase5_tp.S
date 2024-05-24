@@ -39,6 +39,8 @@
 
 .thumb_func
 	asm_pack32to16:
+		cbz r0, asm_pack32to16_exit
+		cbz r1, asm_pack32to16_exit
 
 
 

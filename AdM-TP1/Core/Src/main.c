@@ -149,6 +149,68 @@ int main(void)
 
 	/* ----------- Función bitfield_clear ----------- */
 
+
+
+
+	/* ----------- Funcion asm_pack32to16 Start ----------- */
+
+	uint32_t pack_lon = 10;
+	int32_t asm_pack_vectorIn[pack_lon];
+	int16_t asm_pack_vectorOut[pack_lon];
+	int32_t pack_vectorIn[pack_lon];
+	int16_t pack_vectorOut[pack_lon];
+
+	asm_pack32to16(asm_pack_vectorIn, asm_pack_vectorOut, pack_lon);
+	asm_pack32to16(pack_vectorIn, pack_vectorOut, pack_lon);
+
+	/* ----------- Función asm_pack32to16 End ----------- */
+
+
+
+
+	/* ----------- Funcion asm_max Start ----------- */
+
+	uint32_t max_result, asm_max_result;
+	uint32_t max_lon = 10;
+	int32_t asm_max_vectorIn[max_lon];
+	int32_t max_vectorIn[max_lon];
+
+	asm_max_result = asm_max(asm_max_vectorIn, max_lon);
+	max_result = max(max_vectorIn, max_lon);
+
+	/* ----------- Función asm_max End ----------- */
+
+
+
+
+	/* ----------- Funcion asm_downSample Start ----------- */
+
+	uint32_t down_long = 10;
+	int32_t down_vectorIn[down_long];
+	int32_t down_vectorOut[down_long];
+	int32_t asm_down_vectorIn[down_long];
+	int32_t asm_down_vectorOut[down_long];
+	uint32_t down_N = 3;
+	asm_downSample(asm_down_vectorIn, asm_down_vectorOut, down_long, down_N);
+	downSample(down_vectorIn, down_vectorOut, down_long, down_N);
+
+	/* ----------- Función asm_downSample End ----------- */
+
+
+
+
+	/* ----------- Funcion asm_invertir Start ----------- */
+
+	uint32_t invrt_long = 10;
+	uint16_t invrt_vectorIn[invrt_long];
+	uint16_t asm_invrt_vectorIn[invrt_long];
+	invertir(invrt_vectorIn, invrt_long);
+	asm_invertir(asm_invrt_vectorIn, invrt_long);
+
+	/* ----------- Función asm_invertir End ----------- */
+
+
+
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -510,7 +572,14 @@ uint32_t bitfield_toggle(uint32_t *dato, uint32_t ancho, uint32_t inicio){
 
 /*
  * @Func:	pack32to16(int32_t * vectorIn, int16_t *vectorOut, uint32_t longitud)
- * @Brief:
+ *
+ * @Brief:	Realizar una función que reciba un vector de
+ * 			números signados de 32 bits y los
+ * 			“empaquete” en otro vector de 16 bits, guardando
+ * 			la parte alta (MSB).
+ * 			Sugerencia: utilice números mayores a 100.000 y
+ * 			menores a -100.000 en el vector de pruebas para
+ * 			poder ver los resultados.
  *
  * @Parameters:
  * 		int32_t *vectorIn:
@@ -522,11 +591,17 @@ uint32_t bitfield_toggle(uint32_t *dato, uint32_t ancho, uint32_t inicio){
  */
 void pack32to16(int32_t * vectorIn, int16_t *vectorOut, uint32_t longitud){
 
+
+	return;
+
 }
 
 /*
  * @Func:	max(int32_t *vectorIn, uint32_t longitud)
- * @Brief:
+ *
+ * @Brief:	Realizar una función que reciba un vector de
+ * 			números signados de 32 bits y devuelva la
+ * 			posición del máximo del vector.
  *
  * @Parameters:
  * 		int32_t *vectorIn:
@@ -545,7 +620,12 @@ uint32_t max(int32_t *vectorIn, uint32_t longitud){
 
 /*
  * @Func:	downSample(int32_t * vectorIn, int32_t * vectorOut, uint32_t longitud, uint32_t N)
- * @Brief:
+ *
+ * @Brief:	Realizar una función que reciba un vector de muestras
+ * 			signadas de 32 bits y descarte una de cada N muestras.
+ * 			Si se impone en la aplicación que longitud siempre
+ * 			es múltiplo de N, ¿cómo determinaría la longitud de
+ * 			vectorOut?
  *
  * @Parameters:
  * 		int32_t *vectorIn:
@@ -565,7 +645,9 @@ void downSample(int32_t * vectorIn, int32_t * vectorOut, uint32_t longitud, uint
 
 /*
  * @Func:	invertir(uint16_t * vector, uint32_t longitud)
- * @Brief:
+ *
+ * @Brief:	Realizar una función que reciba un vector de
+ * 			muestras no signadas de 16 bits e invierta su orden.
  *
  * @Parameters:
  * 		uint16_t *vector:
