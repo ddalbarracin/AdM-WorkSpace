@@ -154,6 +154,7 @@ int main(void)
 
 	/* ----------- Funcion asm_pack32to16 Start ----------- */
 
+    /*
 	uint32_t pack_lon = 10;
 	int32_t asm_pack_vectorIn[pack_lon];
 	int16_t asm_pack_vectorOut[pack_lon];
@@ -162,6 +163,12 @@ int main(void)
 
 	asm_pack32to16(asm_pack_vectorIn, asm_pack_vectorOut, pack_lon);
 	pack32to16(pack_vectorIn, pack_vectorOut, pack_lon);
+	*/
+	int32_t vectorIn[] = { 123456, -123456, 200000, -200000 };
+	int16_t vectorOut[4];
+	uint32_t longitud = 4;
+
+	asm_pack32to16(vectorIn, vectorOut, longitud);
 
 	/* ----------- Función asm_pack32to16 End ----------- */
 

@@ -38,16 +38,30 @@
 */
 
 .thumb_func
+    /*
 	asm_pack32to16:
 		cbz r0, asm_pack32to16_exit
 		cbz r1, asm_pack32to16_exit
 
-
-
-
 	asm_pack32to16_exit:
 		bx lr
+	*/
+    PUSH {R4, R5, LR}            // Guardar registros de uso general y LR
 
+    CMP R2, #0                   // Comprobar si la longitud es 0
+    BEQ end                      // Si es 0, terminar
+
+    loop:
+        LDR R3, [R0], #4             // Cargar el siguiente valor de 32 bits y post-incrementar vectorIn
+        MOV R4, R3, LSR #16          // Desplazar R3 16 bits a la derecha (obtener los 16 bits más significativos)
+        STRH R4, [R1], #2            // Almacenar en vectorOut como un valor de 16 bits y post-incrementar vectorOut
+
+        SUBS R2, R2, #1              // Decrementar la longitud
+        BNE loop                     // Repetir hasta que R2 sea 0
+
+    end:
+        POP {R4, R5, LR}             // Restaurar registros
+        BX LR                        // Retornar de la función
 
 
 /*
