@@ -34,12 +34,17 @@
  	r2: Vector's lenght
 
  Return: r0: None
+
+ Created on: May 25, 2024
+ Author: Dante Mendoza
+ SIU: e2206
  **************************************************************
 */
 
 .thumb_func
-    /*
+
 	asm_pack32to16:
+	/*
 		cbz r0, asm_pack32to16_exit
 		cbz r1, asm_pack32to16_exit
 
@@ -78,18 +83,59 @@
  	r1: Vector's lenght
 
  Return: r0: None
+
+ Created on: May 25, 2024
+ Author: Daniel David Albarracin
+ SIU: e2207
  **************************************************************
 */
+/*
+	uint32_t max(int32_t *vectorIn, uint32_t longitud){
 
+		uint32_t index = 0;
+
+		uint32_t posMax = 0;
+		int32_t MaxValue;
+
+		MaxValue = vectorIn[longitud-1];
+
+		for (index = longitud-1; index > 0; index --){
+			if (vectorIn[index-1] > MaxValue){
+				posMax = index-1;
+				MaxValue = vectorIn[index-1];
+			}
+		}
+
+		return(posMax);
+
+	}
+*/
 .thumb_func
 	asm_max:
+		push {r4-r5}				@ stack frame
+		mov r4, #0					@ default return value
+		cbz r0, asm_max_exit		@ if pointer is NULL, exit
+		cbz r1, asm_max_exit		@ if lenght is zero, exit
 
-
+		mov r2, r1					@ r2 = index = longitud
+		sub r2, #1					@ r2 = index  = longitud -1
+		ldr r3, [r0, r1, lsl #2] 	@ r3 = *(r0 + r1<<2) => MaxValue = vectorIn[longitud-1]
+		mov r4, r2					@ r4 = posMax = (longitud -1)
+	loop_max:
+		sub r2, #1					@ r2 = index - 1
+		ldr r5, [r0, r2, lsl #2]	@ r5 = *(ro + r2) = vectorIn[index-1]
+		cmp r5, r3					@ r5 - r3 > 0 ?
+		itt ge
+		movge r3, r5				@ if r5>r3 then r3 = r5 => MaxValue = vectorIn[index-1]
+		movge r4, r2				@ if r5>r3 then r4 = r2 => posMax = (index - 1)
+		cbz r2, asm_max_exit		@ compare and branch if z flag is set. if r1 is zero branch to exit
+		b loop_max					@ inconditional branch to loop_max
 
 
 	asm_max_exit:
-		bx lr
-
+		mov r0, r4					@ return Position
+		pop {r4 - r5}				@ stack frame
+		bx lr						@ return
 
 /*
  **************************************************************
@@ -109,21 +155,33 @@
  	r3: N value
 
  Return: r0: None
+
+ Created on: May 25, 2024
+ Author: Edilberto Carvajal Peñafiel
+ SIU: e2203
  **************************************************************
 */
 
 .thumb_func
 	asm_downSample:
+		push {r4-r8}						@ stack frame
+		cbz r0, asm_downSple_exit			@ if vectorIn pointer is NULL, exit
+		cbz r1, asm_downSple_exit			@ if vectorOut pointer is NULL, exit
+		cbz r2, asm_downSple_exit			@ if length pointer is zero, exit
+		cbz r3, asm_downSple_exit			@ if N value is zero, exit
+
+
+	loop_smpl:
 
 
 
-
-	asm_downSample_exit:
-		bx lr
+		b loop_smpl
 
 
 
-
+	asm_downSple_exit:
+		pop {r4-r8}							@ stack frame
+		bx lr								@ return
 
 /*
  **************************************************************
@@ -139,19 +197,54 @@
  	r1: Vector's lenght
 
  Return: r0: None
+
+ Created on: May 25, 2024
+ Author: Daniel David Albarracin
+ SIU: e2207
  **************************************************************
+*/
+/*
+	void invertir(uint16_t *vector, uint32_t longitud) {
+
+		uint16_t firstValue, lastValue;
+		uint16_t index;
+
+		for (index = 0; index < (longitud / 2); index++) {
+			firstValue = vector[index];
+			lastValue = vector[(longitud - 1) - index];
+			vector[index] = lastValue;
+			vector[(longitud - 1) - index] = firstValue;
+		}
+
+		return;
+
+	}
 */
 
 .thumb_func
 	asm_invertir:
+		push {r4 - r7}					@ stack frame
+		cbz r0, asm_invrtr_exit			@ if pointer is NULL, exit
+		cbz r1, asm_invrtr_exit			@ if lenght is zero, exit
 
+		mov r2, #0						@ r2 = index = 0
+		mov r6, r1						@ r6 = longitud
+		lsr r3, r1, #1					@ r3 = r1/2 = longitud/2
+		sub r6, #1						@ r6 = (r1 - 1) => r6 = (longitud - 1)
 
+	loop_invrtr:
 
+		lsl r7, r2, #1					@ r7 = (r2*2)
+		ldrh r4, [r0, r7] 				@ r4 = *(r0 + r2*2) => firstValue = vector[index]
+		ldrh r5, [r0, r6, lsl #1]		@ r5 = *(r0 + r6<<1) => lastValue = vector[(longitud - 1)]
+		strh r5, [r0, r7]				@ *(r0 + r7) = r5 => rvector[index] = lastValue;
+		strh r4, [r0, r6, lsl #1]		@ *(r0 + r6<<1) = r4 => vector[(longitud - 1) - index] = firstValue
+		add r2, #1						@ r2 = r2 + 1 = indice + 1
+		sub r6, #1						@ r6 = r6 -1 => indice + 1
+		cmp r2, r3						@ compare r2 with r3.
+		beq asm_invrtr_exit				@ if (r2 - r3 == 0) then branch to exit
+		b loop_invrtr					@ else branch to loop
 
-	asm_invertir_exit:
-		bx lr
-
-
-
-
-
+	asm_invrtr_exit:
+		pop {r4 - r7}					@ stack frame
+		bx lr							@ return

@@ -177,13 +177,14 @@ int main(void)
 
 	/* ----------- Funcion asm_max Start ----------- */
 
-	uint32_t max_result, asm_max_result;
-	uint32_t max_lon = 10;
-	int32_t asm_max_vectorIn[max_lon];
-	int32_t max_vectorIn[max_lon];
+	uint32_t max_result;
+	uint32_t asm_max_result;
+	uint32_t max_lon = 5;
+	int32_t asm_max_vectorIn[]= {100000, -522, 35812, -7999, -2588888};
+	int32_t max_vectorIn[] = {100000, -522, 35812, -7999, -2588888};
 
-	asm_max_result = asm_max(asm_max_vectorIn, max_lon);
 	max_result = max(max_vectorIn, max_lon);
+	asm_max_result = asm_max(asm_max_vectorIn, max_lon);
 
 	/* ----------- Función asm_max End ----------- */
 
@@ -208,9 +209,9 @@ int main(void)
 
 	/* ----------- Funcion asm_invertir Start ----------- */
 
-	uint32_t invrt_long = 10;
-	uint16_t invrt_vectorIn[invrt_long];
-	uint16_t asm_invrt_vectorIn[invrt_long];
+	uint32_t invrt_long = 9;
+	uint16_t invrt_vectorIn[] = {0,1,2,3,4,5,6,7,8};
+	uint16_t asm_invrt_vectorIn[] = {0,1,2,3,4,5,6,7,8};
 	invertir(invrt_vectorIn, invrt_long);
 	asm_invertir(asm_invrt_vectorIn, invrt_long);
 
@@ -616,12 +617,29 @@ void pack32to16(int32_t * vectorIn, int16_t *vectorOut, uint32_t longitud){
  *
  * @Return:
  * 		uint32_t
+ *
+ * @Created on: May 25, 2024
+ * @Author: Daniel David Albarracin
+ * @SIU: e2207
+ *
  */
-uint32_t max(int32_t *vectorIn, uint32_t longitud){
+uint32_t max(int32_t *vectorIn, uint32_t longitud) {
 
-	uint32_t result = 0;
+	uint32_t index = 0;
 
-	return(result);
+	uint32_t posMax = 0;
+	int32_t MaxValue = 0;
+
+	MaxValue = vectorIn[longitud - 1];
+
+	for (index = (longitud - 1); index > 0; index--) {
+		if (vectorIn[index - 1] > MaxValue) {
+			posMax = (index - 1);
+			MaxValue = vectorIn[index - 1];
+		}
+	}
+
+	return (posMax);
 
 }
 
@@ -662,9 +680,23 @@ void downSample(int32_t * vectorIn, int32_t * vectorOut, uint32_t longitud, uint
  *
  * @Return:
  * 		None
+ *
+ * @Created on: May 25, 2024
+ * @Author: Daniel David Albarracin
+ * @SIU: e2207
+ *
  */
-void invertir(uint16_t * vector, uint32_t longitud){
+void invertir(uint16_t *vector, uint32_t longitud) {
 
+	uint16_t firstValue, lastValue;
+	uint16_t index;
+
+	for (index = 0; index < (longitud / 2); index++) {
+		firstValue = vector[index];
+		lastValue = vector[(longitud - 1) - index];
+		vector[index] = lastValue;
+		vector[(longitud - 1) - index] = firstValue;
+	}
 
 	return;
 
