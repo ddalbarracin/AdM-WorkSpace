@@ -663,6 +663,12 @@ uint32_t max(int32_t *vectorIn, uint32_t longitud) {
  */
 void downSample(int32_t * vectorIn, int32_t * vectorOut, uint32_t longitud, uint32_t N){
 
+	uint32_t outIndex = 0;
+	for (uint32_t i = 0; i < longitud; i++) {
+		if ((i + 1) %N != 0) {
+			vectorOut[outIndex++] = vectorIn[i];
+	    }
+	}
 
 	return;
 

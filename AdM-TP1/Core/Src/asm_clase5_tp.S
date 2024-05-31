@@ -161,6 +161,16 @@
  SIU: e2203
  **************************************************************
 */
+/*
+	void downSample(int32_t * vectorIn, int32_t * vectorOut, uint32_t longitud, uint32_t N){
+    	uint32_t outIndex = 0;
+    	for (uint32_t i = 0; i < longitud; i++) {
+        	if ((i + 1) %N != 0) {
+            	vectorOut[outIndex++] = vectorIn[i];
+        	}
+    	}
+	}
+*/
 
 .thumb_func
 	asm_downSample:
@@ -170,18 +180,36 @@
 		cbz r2, asm_downSple_exit			@ if length pointer is zero, exit
 		cbz r3, asm_downSple_exit			@ if N value is zero, exit
 
+		mov r4, #0                          @ outIndex = 0
+   	    mov r5, #0                  		@ i = 0
 
 	loop_smpl:
+		cmp r5, r2							@ Compare i with longitud
+		bge asm_downSple_exit				@ If i >= longitud, exit the loop
 
+		add r6, r5, #1						@ Calculate (i + 1) / N
+		udiv r6, r6, r3
 
+		mls r6, r6, r3, r5					 @ Calculate the remainder of (i + 1) % N
 
-		b loop_smpl
+		cmp r6, #0							 @ Compare the remainder with 0
 
+		it ne								 @ If-Then: execute the next instruction if the remainder is not equal to 0
+		ldrne r6, [r0, r5, LSL #2]			 @ If the remainder is not 0, load vectorIn[i]
 
+		it ne
+		strne r6, [r1, r4, LSL #2]			 @ If the remainder is not 0, store it in vectorOut[outIndex]
+
+		it ne
+		addne r4, r4, #1					 @ If the remainder is not 0, increment outIndex
+
+		add r5, r5, #1						 @ Increment i
+
+		b loop_smpl							 @ Jump back to the start of the loop
 
 	asm_downSple_exit:
-		pop {r4-r8}							@ stack frame
-		bx lr								@ return
+		pop {r4-r8}							 @ stack frame
+		bx lr								 @ return
 
 /*
  **************************************************************
