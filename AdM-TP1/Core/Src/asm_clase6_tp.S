@@ -1,5 +1,5 @@
 /*
- * asm_clase6_tp.S
+ * AdM_e2201_e2203_e2207_GE3.S
  *
  *  Created on: Jun 6, 2024
  *      Author: ddalbarracin
@@ -45,7 +45,22 @@
  **************************************************************
 */
 /*
-	aqui funcion
+
+uint32_t c_potencia (int16_t * vecIn, uint32_t longitud) {
+
+	uint32_t power = 0;
+
+	for (int32_t i = 0; i < longitud; i++) {
+
+		power += vecIn [i] * vecIn [i];
+
+	}
+
+	power /= longitud;
+
+	return power;
+
+}
 
 */
 
@@ -99,7 +114,22 @@
  **************************************************************
 */
 /*
-	aqui funcion
+
+uint32_t c_potencia (int16_t * vecIn, uint32_t longitud) {
+
+	uint32_t power = 0;
+
+	for (int32_t i = 0; i < longitud; i++) {
+
+		power += vecIn [i] * vecIn [i];
+
+	}
+
+	power /= longitud;
+
+	return power;
+
+}
 
 */
 
@@ -128,7 +158,7 @@
 /*
  **************************************************************
  Prototype:
- 	void asm_medDif(int8_t *e, int8_t *x, int8_t *y, uint16_t longitud)
+ 	void asm_medDif (int8_t *e, int8_t *x, int8_t *y, uint16_t longitud)
 
  Brief:
  	Implementar una función que calcule el vector de diferencia
@@ -155,7 +185,16 @@
  **************************************************************
 */
 /*
-	aqui funcion en C
+
+void c_medDif (int8_t * e, int8_t *x, int8_t *y, uint16_t longitud) {
+
+	for (int32_t i = 0; i < longitud; i++) {
+
+		e[i] = (x[i] - y [i]) / 2;
+
+	}
+
+}
 
 */
 
@@ -213,7 +252,16 @@
  **************************************************************
 */
 /*
-	aqui funcion en C
+
+void c_medDif (int8_t * e, int8_t *x, int8_t *y, uint16_t longitud) {
+
+	for (int32_t i = 0; i < longitud; i++) {
+
+		e[i] = (x[i] - y [i]) / 2;
+
+	}
+
+}
 
 */
 
@@ -271,7 +319,29 @@
  **************************************************************
 */
 /*
-	aqui funcion en C
+
+void c_eco (int16_t * signal, int16_t *eco, uint32_t longitud) {
+
+	// offset[index] = ((offset[ms] * fs[Hz]) / 1000) - 1
+	uint32_t offset = ((20 * 44100) / 1000) - 1;
+
+	uint32_t sample = 0;
+
+	for (uint32_t i = 0; i < longitud; i++) {
+
+		sample = signal [i];
+
+		if (i >= offset) {
+
+			sample = signal[i] + (signal[i - offset] / 2);
+
+		}
+
+		eco[i] = sample;
+
+	}
+
+}
 
 */
 
@@ -326,7 +396,29 @@
  **************************************************************
 */
 /*
-	aqui funcion en C
+
+void c_eco (int16_t * signal, int16_t *eco, uint32_t longitud) {
+
+	// offset[index] = ((offset[ms] * fs[Hz]) / 1000) - 1
+	uint32_t offset = ((20 * 44100) / 1000) - 1;
+
+	uint32_t sample = 0;
+
+	for (uint32_t i = 0; i < longitud; i++) {
+
+		sample = signal [i];
+
+		if (i >= offset) {
+
+			sample = signal[i] + (signal[i - offset] / 2);
+
+		}
+
+		eco[i] = sample;
+
+	}
+
+}
 
 */
 
