@@ -40,8 +40,8 @@
  	r0: Output Vector Potencia
 
  Created on: Jun 6, 2024
- Author:
- SIU: e22
+ Author: Daniel David Albarracin
+ SIU: e2207
  **************************************************************
 */
 /*
@@ -50,13 +50,16 @@ uint32_t c_potencia (int16_t * vecIn, uint32_t longitud) {
 
 	uint32_t power = 0;
 
-	for (int32_t i = 0; i < longitud; i++) {
+	if ((vecIn != NULL) & (longitud != 0)){
 
-		power += vecIn [i] * vecIn [i];
+		for (int32_t i = 0; i < longitud; i++) {
 
+			power += (vecIn [i] * vecIn [i]);
+
+		}
+
+		power /= longitud;
 	}
-
-	power /= longitud;
 
 	return power;
 
@@ -110,8 +113,8 @@ uint32_t c_potencia (int16_t * vecIn, uint32_t longitud) {
  	r0: Output Vector Potencia
 
  Created on: Jun 6, 2024
- Author:
- SIU: e22
+ Author: Daniel David Albarracin
+ SIU: e2207
  **************************************************************
 */
 /*
@@ -120,13 +123,16 @@ uint32_t c_potencia (int16_t * vecIn, uint32_t longitud) {
 
 	uint32_t power = 0;
 
-	for (int32_t i = 0; i < longitud; i++) {
+	if ((vecIn != NULL) & (longitud != 0)){
 
-		power += vecIn [i] * vecIn [i];
+		for (int32_t i = 0; i < longitud; i++) {
 
+			power += (vecIn [i] * vecIn [i]);
+
+		}
+
+		power /= longitud;
 	}
-
-	power /= longitud;
 
 	return power;
 
@@ -137,24 +143,26 @@ uint32_t c_potencia (int16_t * vecIn, uint32_t longitud) {
 .thumb_func
 
 	asm_potencia_DSP:
-		push {r4 - r8}							@ stack frame
-		mov r4, #0								@ default return value
-		cbz r0, asm_potencia_DSP_exit			@ if pointer is NULL, exit
-		cbz r1, asm_potencia_DSP_exit			@ if lenght is zero, exit
+		push {r4 - r5}									@ stack frame
+		mov r5, #0										@ default return value
+		cbz r0, asm_potencia_DSP_exit					@ if pointer is NULL, exit
+		cbz r1, asm_potencia_DSP_exit					@ if lenght is zero, exit
+		mov r2, r1										@ r2 = r1, r2 = length
 
-	loop_potencia_DSP:
+		loop_potencia_DSP:
+			sub r2, #2									@ r2 = length -2
+			ldr r3, [r0, r2, lsl #1]					@ r3 = *(r0 + r2<<1)
+			mov r4, r3									@ r4 = r3
+			smlad r5, r3, r4, r5						@ r5 = x[n]*x[n] + x[n-1]*x[n-1] + r5
+			cbz r2,  asm_potencia_DSP_before_exit		@if r2 is zero then exit
+			b loop_potencia_DSP							@then branch to loop
 
-
-
+	asm_potencia_DSP_before_exit:
+		udiv r5, r1										@ r5 = r5 / r1 = addition / Length
 	asm_potencia_DSP_exit:
-		mov r0, r4							@ return value
-		pop {r4 - r8}						@ stack frame
-		bx lr								@ return
-
-
-
-
-
+		mov r0, r5										@ return value
+		pop {r4 - r5}									@ stack frame
+		bx lr											@ return
 
 /*
  **************************************************************
@@ -187,14 +195,18 @@ uint32_t c_potencia (int16_t * vecIn, uint32_t longitud) {
 */
 /*
 
-void c_medDif (int8_t * e, int8_t *x, int8_t *y, uint16_t longitud) {
+void c_medDif(int8_t * e, int8_t *x, int8_t *y, uint16_t longitud) {
 
-	for (int32_t i = 0; i < longitud; i++) {
+	if ((e != NULL) & (x != NULL) & (y != NULL) & (longitud != 0)){
 
-		e[i] = (x[i] - y [i]) / 2;
+		for (int32_t i = 0; i < longitud; i++) {
 
+			e[i] = (x[i] - y [i]) / 2;
+
+		}
 	}
 
+	return;
 }
 
 */
