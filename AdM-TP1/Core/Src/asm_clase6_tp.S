@@ -67,25 +67,26 @@ uint32_t c_potencia (int16_t * vecIn, uint32_t longitud) {
 .thumb_func
 
 	asm_potencia:
-		push {r4 - r8}						@ stack frame
-		mov r4, #0							@ default return value
-		cbz r0, asm_potencia_exit			@ if pointer is NULL, exit
-		cbz r1, asm_potencia_exit			@ if lenght is zero, exit
+		push {r4 - r5}								@ stack frame
+		mov r5, #0									@ default return value. power = 0
+		cbz r0, asm_potencia_exit					@ if pointer is NULL, exit
+		cbz r1, asm_potencia_exit					@ if lenght is zero, exit
+		mov r2, r1									@ r2 = r1, r2 = length
 
-	loop_potencia:
+		loop_potencia:
+			sub r2, #1								@ r2 = length -1
+			ldrsh r3, [r0, r2, lsl #1 ]				@ r3 = *(r0 + r2<<1)
+			mov r4, r3								@ r4 = r3
+			mla r5, r4, r3, r5						@ r5 = (r3*r4) + r5
+			cbz r2,  asm_potencia_before_exit		@if r2 is zero then exit
+			b loop_potencia							@then branch to loop
 
-
-
+	asm_potencia_before_exit:
+		udiv r5, r1									@ r5 = r5 / r1 = addition / Length
 	asm_potencia_exit:
-		mov r0, r4							@ return value
-		pop {r4 - r8}						@ stack frame
-		bx lr								@ return
-
-
-
-
-
-
+		mov r0, r5									@ return value
+		pop {r4 - r5}								@ stack frame
+		bx lr										@ return
 
 /*
  **************************************************************

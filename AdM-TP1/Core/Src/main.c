@@ -767,14 +767,17 @@ void invertir(uint16_t *vector, uint32_t longitud) {
 uint32_t c_potencia (int16_t * vecIn, uint32_t longitud) {
 
 	uint32_t power = 0;
+	if ((vecIn != NULL) & (longitud != 0)){
 
-	for (int32_t i = 0; i < longitud; i++) {
 
-		power += vecIn [i] * vecIn [i];
+		for (int32_t i = 0; i < longitud; i++) {
 
+			power += vecIn [i] * vecIn [i];
+
+		}
+
+		power /= longitud;
 	}
-
-	power /= longitud;
 
 	return (power);
 
