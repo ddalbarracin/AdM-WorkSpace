@@ -846,7 +846,7 @@ void c_medDif(int8_t * e, int8_t *x, int8_t *y, uint16_t longitud) {
 void c_eco(int16_t * signal, int16_t *eco, uint32_t longitud) {
 
 	// offset[index] = ((offset[ms] * fs[Hz]) / 1000) - 1
-	uint32_t offset = ((20 * 44100) / 1000) - 1;	// Sample = 81
+	uint32_t offset = ((20 * 44100) / 1000) - 1;	// Initial Eco Sample = 81
 
 	uint32_t sample = 0;
 
