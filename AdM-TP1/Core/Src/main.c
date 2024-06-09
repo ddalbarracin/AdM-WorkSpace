@@ -226,11 +226,34 @@ int main(void)
 
 	/* ----------- Funcion c_potencia Start ----------- */
 
-	uint32_t power = c_potencia(vecIn, POTENCIA_LEN);
+	uint32_t power, asm_power, asm_DSP_power;
+	power = asm_power = asm_DSP_power = 0;
+	power = c_potencia(c_potencia_vecIn, c_potencia_POTENCIA_LEN);
+	asm_power = asm_potencia(c_potencia_vecIn, c_potencia_POTENCIA_LEN);
+	asm_DSP_power = asm_potencia_DSP(c_potencia_vecIn, c_potencia_POTENCIA_LEN);
+
 
 	/* ----------- Función c_potencia End ----------- */
 
 
+	/* ----------- Funcion c_medDif Start ----------- */
+
+	c_medDif(c_medDif_e, c_medDif_x, c_medDif_y, c_medDif_longitud);
+	asm_medDif(asm_medDif_e, c_medDif_x, c_medDif_y, c_medDif_longitud);
+	asm_medDif_DSP(asm_DSP_medDif_e, c_medDif_x, c_medDif_y, c_medDif_longitud);
+
+
+
+	/* ----------- Función c_medDif End ----------- */
+
+
+	/* ----------- Funcion c_eco Start ----------- */
+
+	c_eco(c_eco_signalIn, c_eco_signalOut, c_eco_longitud);
+	asm_eco(c_eco_signalIn, asm_eco_signalOut, c_eco_longitud);
+	asm_eco_DSP(c_eco_signalIn, asm_DSP_eco_signalOut, c_eco_longitud);
+
+	/* ----------- Función c_eco End ----------- */
 
   /* USER CODE END 1 */
 
@@ -721,6 +744,26 @@ void invertir(uint16_t *vector, uint32_t longitud) {
 
 }
 
+
+/*
+ * @Func:	c_potencia (int16_t * vecIn, uint32_t longitud)
+ *
+ * @Brief:	Implementar una función que calcule la potencia
+ * 			de una señal discreta x[n] con datos signados de
+ * 			16 bits
+ *
+ * @Parameters:
+ * 		int16_t *vector:
+ * 		uint32_t longitud:
+ *
+ * @Return:
+ * 		uint32_t power
+ *
+ * @Created on: June 06, 2024
+ * @Author: All
+ * @SIU: e2201 - e2203 - e2207
+ *
+ */
 uint32_t c_potencia (int16_t * vecIn, uint32_t longitud) {
 
 	uint32_t power = 0;
@@ -733,11 +776,31 @@ uint32_t c_potencia (int16_t * vecIn, uint32_t longitud) {
 
 	power /= longitud;
 
-	return power;
+	return (power);
 
 }
 
-
+/*
+ * @Func:	c_medDif(int8_t * e, int8_t *x, int8_t *y, uint16_t longitud)
+ *
+ * @Brief:	Implementar una función que calcule el vector de diferencia
+ * 			media entre dos señales discretas x[n] e y[n] con datos
+ * 			signados de 8 bits y de igual cantidad de elementos
+ *
+ * @Parameters:
+ * 		int8_t *e: mean difference vector
+ * 		int8_t *x: x signal
+ * 		int8_t *y: y signal
+ * 		uint16_t longitud: vector length
+ *
+ * @Return:
+ * 		None
+ *
+ * @Created on: Jun 06, 2024
+ * @Author: All
+ * @SIU: e2201 - e2203 - e2207
+ *
+ */
 void c_medDif(int8_t * e, int8_t *x, int8_t *y, uint16_t longitud) {
 
 	for (int32_t i = 0; i < longitud; i++) {
@@ -748,7 +811,31 @@ void c_medDif(int8_t * e, int8_t *x, int8_t *y, uint16_t longitud) {
 
 }
 
-void c_eco (int16_t * signal, int16_t *eco, uint32_t longitud) {
+
+/*
+ * @Func:	c_eco(int16_t * signal, int16_t *eco, uint32_t longitud)
+ *
+ * @Brief:	Realizar una función que recibe un vector de 4096
+ * 			valores de 16 bits signados, que corresponden a muestras
+ * 			de audio tomadas a una tasa de muestreo de 44.100
+ * 			muestras/s. La función debe introducir un “eco” que
+ * 			consiste en adicionar a la señal original, la propia
+ * 			señal original dividida por dos y atrasada en 20 mseg
+ *
+ * @Parameters:
+ * 		int16_t *signal: signal vector
+ * 		int16_t *eco: eco signal
+ * 		uint32_t longitud: vector length
+ *
+ * @Return:
+ * 		None
+ *
+ * @Created on: Jun 06, 2024
+ * @Author: All
+ * @SIU: e2201 - e2203 - e2207
+ *
+ */
+void c_eco(int16_t * signal, int16_t *eco, uint32_t longitud) {
 
 	// offset[index] = ((offset[ms] * fs[Hz]) / 1000) - 1
 	uint32_t offset = ((20 * 44100) / 1000) - 1;
