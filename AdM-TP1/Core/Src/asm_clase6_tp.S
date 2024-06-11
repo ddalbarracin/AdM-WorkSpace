@@ -70,10 +70,11 @@
 .thumb_func
 
 	asm_potencia:
-		push {r4 - r5}								@ stack frame
-		mov r5, #0									@ default return value. power = 0
 		cbz r0, asm_potencia_exit					@ if pointer is NULL, exit
 		cbz r1, asm_potencia_exit					@ if lenght is zero, exit
+
+		push {r4 - r5}								@ stack frame
+		mov r5, #0									@ default return value. power = 0
 		mov r2, r1									@ r2 = r1, r2 = length
 
 		loop_potencia:
@@ -143,10 +144,11 @@
 .thumb_func
 
 	asm_potencia_DSP:
-		push {r4 - r5}									@ stack frame
-		mov r5, #0										@ default return value
 		cbz r0, asm_potencia_DSP_exit					@ if pointer is NULL, exit
 		cbz r1, asm_potencia_DSP_exit					@ if lenght is zero, exit
+
+		push {r4 - r5}									@ stack frame
+		mov r5, #0										@ default return value
 		mov r2, r1										@ r2 = r1, r2 = length
 
 		loop_potencia_DSP:
@@ -340,9 +342,9 @@
 	void c_eco(int16_t * signal, int16_t *eco, uint32_t longitud) {
 
 		// offset[index] = ((offset[ms] * fs[Hz]) / 1000) - 1
-		uint32_t offset = ((20 * 44100) / 1000) - 1;	// Initial Eco Sample = 81
+		uint32_t offset = ((20 * 44100) / 1000) - 1;	// Initial Eco Sample = 881
 
-		uint32_t sample = 0;
+		int16_t sample = 0;
 
 		if ((signal != NULL) & (longitud != 0)){
 
@@ -354,7 +356,7 @@
 
 				if (i >= offset) {
 
-					sample = signal[i] + (signal[i - offset] / 2);
+					sample += (signal[i - offset] / 2);
 
 				}
 
@@ -372,20 +374,39 @@
 .thumb_func
 
 	asm_eco:
-		push {r4 - r8}					@ stack frame
 		cbz r0, asm_eco_exit			@ if pointer is NULL, exit
 		cbz r1, asm_eco_exit			@ if pointer is NULL, exit
 		cbz r2, asm_eco_exit			@ if lenght is zero, exit
 
-
+		push {r4 - r8}					@ stack frame
+		mov r3, #881					@ Echo start index = ((offset[ms] * fs[Hz]) / 1000) - 1
+										@ 				   = ((20ms * 44100Hz) / 1000) - 1 = 881
+		mov r4, #0						@ sample = 0
+		mov r5, #0						@ n = 0
 
 	loop_asm_eco:
+		cmp r5, r2
+		beq asm_eco_exit					@ n == lenght
 
+		ldrsh r4, [r0, r5, lsl #1]			@ r4 = *(r0 + r5 << 1)
 
+		cmp r5, r3
+		blt no_eco
+
+		sub r6, r5, r3						@ r6 = r5 - r3 (r6 = i - offset)
+		ldrsh r7, [r0, r6, lsl #1]			@ r7 = *(r0 + r6 << 1)
+		asr r7, r7, #1						@ r7 = r7 / 2
+		add r4, r4, r7						@ r4 += (signal[i - offset] / 2)
+
+	no_eco:
+		strh r4, [r1, r5, lsl #1]			@ *(r1 + r5 << 2) = r4
+		add r5, #1							@ n = n + 1
+
+		b loop_asm_eco
 
 	asm_eco_exit:
-		pop {r4 - r8}					@ stack frame
-		bx lr							@ return
+		pop {r4 - r8}						@ stack frame
+		bx lr								@ return
 
 
 
@@ -426,7 +447,7 @@
 		// offset[index] = ((offset[ms] * fs[Hz]) / 1000) - 1
 		uint32_t offset = ((20 * 44100) / 1000) - 1;	// Initial Eco Sample = 81
 
-		uint32_t sample = 0;
+		int16_t sample = 0;
 
 		if ((signal != NULL) & (longitud != 0)){
 
@@ -438,7 +459,7 @@
 
 				if (i >= offset) {
 
-					sample = signal[i] + (signal[i - offset] / 2);
+					sample += (signal[i - offset] / 2);
 
 				}
 

@@ -19,6 +19,8 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "string.h"
+#include <time.h>
+#include <stdlib.h>
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -242,12 +244,20 @@ int main(void)
 	asm_medDif(asm_medDif_e, c_medDif_x, c_medDif_y, c_medDif_longitud);
 	asm_medDif_DSP(asm_DSP_medDif_e, c_medDif_x, c_medDif_y, c_medDif_longitud);
 
-
-
 	/* ----------- Función c_medDif End ----------- */
 
 
 	/* ----------- Funcion c_eco Start ----------- */
+
+	/* Initialize the random number generator with a seed based on the current time */
+	srand(time(NULL));
+
+	// Llena el array con números aleatorios en el rango de int16_t
+	for (int i = 0; i < c_eco_longitud; i++) {
+
+		c_eco_signalIn[i] = (int16_t)(rand() % (INT16_MAX - INT16_MIN + 1) + INT16_MIN);
+
+	}
 
 	c_eco(c_eco_signalIn, c_eco_signalOut, c_eco_longitud);
 	asm_eco(c_eco_signalIn, asm_eco_signalOut, c_eco_longitud);
@@ -780,7 +790,7 @@ uint32_t c_potencia (int16_t * vecIn, uint32_t longitud) {
 
 	}
 
-	return (power);
+	return power;
 
 }
 
@@ -816,7 +826,6 @@ void c_medDif(int8_t * e, int8_t *x, int8_t *y, uint16_t longitud) {
 		}
 	}
 
-	return;
 }
 
 
@@ -846,9 +855,9 @@ void c_medDif(int8_t * e, int8_t *x, int8_t *y, uint16_t longitud) {
 void c_eco(int16_t * signal, int16_t *eco, uint32_t longitud) {
 
 	// offset[index] = ((offset[ms] * fs[Hz]) / 1000) - 1
-	uint32_t offset = ((20 * 44100) / 1000) - 1;	// Initial Eco Sample = 81
+	uint32_t offset = ((20 * 44100) / 1000) - 1;	// Initial Eco Sample = 881
 
-	uint32_t sample = 0;
+	int16_t sample = 0;
 
 	if ((signal != NULL) & (longitud != 0)){
 
@@ -860,7 +869,7 @@ void c_eco(int16_t * signal, int16_t *eco, uint32_t longitud) {
 
 			if (i >= offset) {
 
-				sample = signal[i] + (signal[i - offset] / 2);
+				sample += (signal[i - offset] / 2);
 
 			}
 
@@ -870,7 +879,6 @@ void c_eco(int16_t * signal, int16_t *eco, uint32_t longitud) {
 
 	}
 
-	return;
 }
 
 
