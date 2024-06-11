@@ -249,6 +249,11 @@ int main(void)
 
 	/* ----------- Funcion c_eco Start ----------- */
 
+	int16_t c_eco_signalIn[c_eco_longitud];
+	int16_t c_eco_signalOut [c_eco_longitud];
+	int16_t asm_eco_signalOut [c_eco_longitud];
+	int16_t asm_DSP_eco_signalOut [c_eco_longitud];
+
 	/* Initialize the random number generator with a seed based on the current time */
 	srand(time(NULL));
 

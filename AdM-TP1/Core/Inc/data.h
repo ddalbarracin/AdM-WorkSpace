@@ -35,9 +35,6 @@ int8_t asm_DSP_medDif_e [c_medDif_longitud];
 
 /* c_medDif data */
 
-int16_t c_eco_signalIn[c_eco_longitud];
-int16_t c_eco_signalOut [c_eco_longitud];
-int16_t asm_eco_signalOut [c_eco_longitud];
-int16_t asm_DSP_eco_signalOut [c_eco_longitud];
+
 
 #endif /* __DATA_H__ */

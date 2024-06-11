@@ -2,7 +2,9 @@
  * AdM_e2201_e2203_e2207_GE3.S
  *
  *  Created on: Jun 6, 2024
- *      Author: ddalbarracin
+ *      Author: Daniel Albarracin
+ *				Roberto Castro Beltran
+ *				Edilberto Carvajal
  */
 
 
@@ -40,8 +42,9 @@
  	r0: Output Vector Potencia
 
  Created on: Jun 6, 2024
- Author: Daniel David Albarracin
- SIU: e2207
+ Author: Daniel Albarracin
+ *		 Roberto Castro Beltran
+ *		 Edilberto Carvajal
  **************************************************************
 */
 /*
@@ -114,8 +117,9 @@
  	r0: Output Vector Potencia
 
  Created on: Jun 6, 2024
- Author: Daniel David Albarracin
- SIU: e2207
+ Author: Daniel Albarracin
+ *		 Roberto Castro Beltran
+ *		 Edilberto Carvajal
  **************************************************************
 */
 /*
@@ -191,8 +195,9 @@
  	r0: None
 
  Created on: Jun 6, 2024
- Author:
- SIU: e22
+ Author: Daniel Albarracin
+ *		 Roberto Castro Beltran
+ *		 Edilberto Carvajal
  **************************************************************
 */
 /*
@@ -262,8 +267,9 @@
  	r0: None
 
  Created on: Jun 6, 2024
- Author:
- SIU: e22
+ Author: Daniel Albarracin
+ *		 Roberto Castro Beltran
+ *		 Edilberto Carvajal
  **************************************************************
 */
 /*
@@ -333,8 +339,9 @@
  	r0: None
 
  Created on: Jun 6, 2024
- Author:
- SIU: e22
+ Author: Daniel Albarracin
+ *		 Roberto Castro Beltran
+ *		 Edilberto Carvajal
  **************************************************************
 */
 /*
@@ -399,7 +406,7 @@
 		add r4, r4, r7						@ r4 += (signal[i - offset] / 2)
 
 	no_eco:
-		strh r4, [r1, r5, lsl #1]			@ *(r1 + r5 << 2) = r4
+		strh r4, [r1, r5, lsl #1]			@ *(r1 + r5 << 1) = r4
 		add r5, #1							@ n = n + 1
 
 		b loop_asm_eco
@@ -436,8 +443,9 @@
  Return: r0: None
 
  Created on: Jun 6, 2024
- Author:
- SIU: e22
+ Author: Daniel Albarracin
+ *		 Roberto Castro Beltran
+ *		 Edilberto Carvajal
  **************************************************************
 */
 /*
@@ -477,19 +485,40 @@
 .thumb_func
 
 	asm_eco_DSP:
-		push {r4 - r8}
 		cbz r0, asm_eco_DSP_exit			@ if pointer is NULL, exit
 		cbz r1, asm_eco_DSP_exit			@ if pointer is NULL, exit
 		cbz r2, asm_eco_DSP_exit			@ if lenght is zero, exit
 
-
+		push {r4 - r8}					@ stack frame
+		mov r3, #881					@ Echo start index = ((offset[ms] * fs[Hz]) / 1000) - 1
+										@ 				   = ((20ms * 44100Hz) / 1000) - 1 = 881
+		mov r4, #0						@ sample = 0
+		mov r5, #0						@ n = 0
+		mov r8, #0						@ aux = 0
 
 	loop_asm_eco_DSP:
+		cmp r5, r2
+		beq asm_eco_DSP_exit				@ n == lenght
 
+		ldr r4, [r0, r5, lsl #1]			@ r4 = *(r0 + r5 << 1)
+
+		cmp r5, r3
+		blt no_eco_DSP
+
+		sub r6, r5, r3						@ r6 = r5 - r3 (r6 = i - offset)
+		ldr r7, [r0, r6, lsl #1]			@ r7 = *(r0 + r6 << 1)
+		shadd16 r7, r7, r8					@ (r7 [31 - 16] + 0) / 2 || (r7 [15 - 0] + 0) / 2
+		sadd16 r4, r4, r7					@ r4 [31 - 16] + r7 [31 - 16] || r4 [15 - 0] + r7 [15 - 0]
+
+	no_eco_DSP:
+		str r4, [r1, r5, lsl #1]			@ *(r1 + r5 << 1) = r4
+		add r5, #2							@ n = n + 2
+
+		b loop_asm_eco_DSP
 
 
 	asm_eco_DSP_exit:
-		pop {r4 - r8}
+		pop {r4 - r8}				@ stack frame
 		bx lr						@ return
 
 
