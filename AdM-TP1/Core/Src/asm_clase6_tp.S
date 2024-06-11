@@ -515,7 +515,7 @@
 		sadd16 r4, r4, r7					@ r4 [31 - 16] + r7 [31 - 16] || r4 [15 - 0] + r7 [15 - 0]
 
 		str r4, [r1, r5, lsl #1]
-		add r5, #2							@ n = n + 1
+		add r5, #2							@ n = n + 2
 
 		b loop_asm_eco_DSP
 
