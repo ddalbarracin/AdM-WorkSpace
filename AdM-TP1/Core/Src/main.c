@@ -97,6 +97,8 @@ void c_eco (int16_t * signal, int16_t *eco, uint32_t longitud);
 int main(void)
 {
   /* USER CODE BEGIN 1 */
+	DWT->CTRL |= 1 << DWT_CTRL_CYCCNTENA_Pos;
+	uint32_t ciclos_C, ciclos_ASM, ciclos_DSP;
 
 	/* ----------- Funcion asm_sum Start ----------- */
 	uint32_t a, b, c;
@@ -264,9 +266,17 @@ int main(void)
 
 	}
 
+	DWT->CYCCNT = 0;
 	c_eco(c_eco_signalIn, c_eco_signalOut, c_eco_longitud);
+	ciclos_C = DWT->CYCCNT; // 301.643
+
+	DWT->CYCCNT = 0;
 	asm_eco(c_eco_signalIn, asm_eco_signalOut, c_eco_longitud);
+	ciclos_ASM = DWT->CYCCNT; // 72.578
+
+	DWT->CYCCNT = 0;
 	asm_eco_DSP(c_eco_signalIn, asm_DSP_eco_signalOut, c_eco_longitud);
+	ciclos_DSP = DWT->CYCCNT;	// 49.335
 
 	/* ----------- Función c_eco End ----------- */
 
