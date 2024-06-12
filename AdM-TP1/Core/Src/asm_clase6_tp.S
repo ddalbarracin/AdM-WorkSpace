@@ -221,15 +221,26 @@
 .thumb_func
 
 	asm_medDif:
-		push {r4 - r8}					@ stack frame
 		cbz r0, asm_medDif_exit			@ if pointer is NULL, exit
 		cbz r1, asm_medDif_exit			@ if pointer is NULL, exit
 		cbz r2, asm_medDif_exit			@ if pointer is NULL, exit
 		cbz r3, asm_medDif_exit			@ if lenght is zero, exit
 
+		push {r4 - r8}					@ stack frame
 
 
 	loop_asm_medDif:
+
+		sub r3, #1						@ lenght = lenght - 1
+		ldrsb r4, [r1, r3]				@ r4 = x[n - 1]
+		ldrsb r5, [r2, r3]				@ r5 = y[n - 1]
+		sub r4, r4, r5					@ r4 = x[n - 1] - y[n - 1]
+		asr r4, r4, #1					@ r4 = r4 / 2
+		strb r4, [r0, r3]				@ e[n - 1] = (x[n - 1] - y[n - 1]) / 2
+
+
+		cbz r3,  asm_medDif_exit		@ if r3 is zero then exit
+		b loop_asm_medDif				@ then branch to loop
 
 
 
@@ -293,16 +304,24 @@
 .thumb_func
 
 	asm_medDif_DSP:
-		push {r4 - r8}						@ stack frame
 		cbz r0, asm_medDif_DSP_exit			@ if pointer is NULL, exit
 		cbz r1, asm_medDif_DSP_exit			@ if pointer is NULL, exit
 		cbz r2, asm_medDif_DSP_exit			@ if pointer is NULL, exit
 		cbz r3, asm_medDif_DSP_exit			@ if lenght is zero, exit
 
-
+		push {r4 - r8}						@ stack frame
 
 	loop_asm_medDif_DSP:
 
+		sub r3, #4							@ lenght = lenght - 4
+		ldr r4, [r1, r3]					@ r4 = x[n - 1]
+		ldr r5, [r2, r3]					@ r5 = y[n - 1]
+		shsub8 r4, r4, r5					@ r4 = (x[n - 1] - y[n - 1]) / 2
+		str r4, [r0, r3]					@ e[n - 1] = r4
+
+
+		cbz r3,  asm_medDif_DSP_exit		@ if r3 is zero then exit
+		b loop_asm_medDif_DSP				@ then branch to loop
 
 
 	asm_medDif_DSP_exit:
