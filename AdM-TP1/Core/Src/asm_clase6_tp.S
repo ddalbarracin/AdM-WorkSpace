@@ -20,6 +20,55 @@
 .global asm_eco_DSP					@AdM-TP2-Ej3-asmDSP
 
 
+/* Analaisis de performance en ciclos de clock para las implementaciones
+
+
+	--> Potencia <--
+
+	DWT->CYCCNT = 0;
+	power = c_potencia(c_potencia_vecIn, c_potencia_POTENCIA_LEN);
+	ciclos_C = DWT->CYCCNT; --> Ciclos_C = 254 ciclos de clock
+
+	DWT->CYCCNT = 0;
+	asm_power = asm_potencia(c_potencia_vecIn, c_potencia_POTENCIA_LEN);
+	ciclos_ASM = DWT->CYCCNT; --> Ciclos_ASM = 66 ciclos de clock
+
+	DWT->CYCCNT = 0;
+	asm_DSP_power = asm_potencia_DSP(c_potencia_vecIn, c_potencia_POTENCIA_LEN);
+	ciclos_DSP = DWT->CYCCNT; --> Ciclos_DSP = 48 ciclos de clock
+
+
+	--> Diferencia Media <--
+
+	DWT->CYCCNT = 0;
+	c_medDif(c_medDif_e, c_medDif_x, c_medDif_y, c_medDif_longitud);
+	ciclos_C = DWT->CYCCNT; --> Ciclos_C = 435 ciclos de clock
+
+	DWT->CYCCNT = 0;
+	asm_medDif(asm_medDif_e, c_medDif_x, c_medDif_y, c_medDif_longitud);
+	ciclos_ASM = DWT->CYCCNT; --> Ciclos_ASM = 129 ciclos de clock
+
+	DWT->CYCCNT = 0;
+	asm_medDif_DSP(asm_DSP_medDif_e, c_medDif_x, c_medDif_y, c_medDif_longitud);
+	ciclos_DSP = DWT->CYCCNT; --> Ciclos_DSP = 55 ciclos de clock
+
+
+	--> Senial Eco <--
+
+	DWT->CYCCNT = 0;
+	c_eco(c_eco_signalIn, c_eco_signalOut, c_eco_longitud);
+	ciclos_C = DWT->CYCCNT; --> Ciclos_C = 313927 ciclos de clock
+
+	DWT->CYCCNT = 0;
+	asm_eco(c_eco_signalIn, asm_eco_signalOut, c_eco_longitud);
+	ciclos_ASM = DWT->CYCCNT; --> Ciclos_ASM = 65264 ciclos de clock
+
+	DWT->CYCCNT = 0;
+	asm_eco_DSP(c_eco_signalIn, asm_DSP_eco_signalOut, c_eco_longitud);
+	ciclos_DSP = DWT->CYCCNT; --> Ciclos_DSP = 43631 ciclos de clock
+
+*/
+
 /*
  **************************************************************
  Prototype:
@@ -108,6 +157,8 @@
  Sugerencia:
  	N: longitud de x
  	P es un número sin signo de 32 bits
+
+ Nota: no se considera el caso N impar
 
  Parameters:
  	r0: Input Vector Address
@@ -249,10 +300,6 @@
 		bx lr							@ return
 
 
-
-
-
-
 /*
  **************************************************************
  Prototype:
@@ -327,10 +374,6 @@
 	asm_medDif_DSP_exit:
 		pop {r4 - r8}						@ stack frame
 		bx lr								@ return
-
-
-
-
 
 
 /*
@@ -433,8 +476,6 @@
 	asm_eco_exit:
 		pop {r4 - r8}						@ stack frame
 		bx lr								@ return
-
-
 
 
 /*
@@ -550,6 +591,5 @@
 	asm_eco_DSP_exit:
 		pop {r4 - r8}				@ stack frame
 		bx lr						@ return
-
 
 

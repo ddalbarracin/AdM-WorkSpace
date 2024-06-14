@@ -232,19 +232,35 @@ int main(void)
 
 	uint32_t power, asm_power, asm_DSP_power;
 	power = asm_power = asm_DSP_power = 0;
-	power = c_potencia(c_potencia_vecIn, c_potencia_POTENCIA_LEN);
-	asm_power = asm_potencia(c_potencia_vecIn, c_potencia_POTENCIA_LEN);
-	asm_DSP_power = asm_potencia_DSP(c_potencia_vecIn, c_potencia_POTENCIA_LEN);
 
+	DWT->CYCCNT = 0;
+	power = c_potencia(c_potencia_vecIn, c_potencia_POTENCIA_LEN);
+	ciclos_C = DWT->CYCCNT; /* Ciclos_C = 254 */
+
+	DWT->CYCCNT = 0;
+	asm_power = asm_potencia(c_potencia_vecIn, c_potencia_POTENCIA_LEN);
+	ciclos_ASM = DWT->CYCCNT; /* Ciclos_ASM = 66 */
+
+	DWT->CYCCNT = 0;
+	asm_DSP_power = asm_potencia_DSP(c_potencia_vecIn, c_potencia_POTENCIA_LEN);
+	ciclos_DSP = DWT->CYCCNT; /* Ciclos_DSP = 48 */
 
 	/* ----------- Función c_potencia End ----------- */
 
 
 	/* ----------- Funcion c_medDif Start ----------- */
-
+	DWT->CYCCNT = 0;
 	c_medDif(c_medDif_e, c_medDif_x, c_medDif_y, c_medDif_longitud);
+	ciclos_C = DWT->CYCCNT; /* Ciclos_C = 435 */
+
+	DWT->CYCCNT = 0;
 	asm_medDif(asm_medDif_e, c_medDif_x, c_medDif_y, c_medDif_longitud);
+	ciclos_ASM = DWT->CYCCNT; /* Ciclos_ASM = 129 */
+
+	DWT->CYCCNT = 0;
 	asm_medDif_DSP(asm_DSP_medDif_e, c_medDif_x, c_medDif_y, c_medDif_longitud);
+	ciclos_DSP = DWT->CYCCNT; /* Ciclos_DSP = 55 */
+
 
 	/* ----------- Función c_medDif End ----------- */
 
@@ -263,15 +279,15 @@ int main(void)
 
 	DWT->CYCCNT = 0;
 	c_eco(c_eco_signalIn, c_eco_signalOut, c_eco_longitud);
-	ciclos_C = DWT->CYCCNT; // 301.643
+	ciclos_C = DWT->CYCCNT; /* Ciclos_C = 313927 */
 
 	DWT->CYCCNT = 0;
 	asm_eco(c_eco_signalIn, asm_eco_signalOut, c_eco_longitud);
-	ciclos_ASM = DWT->CYCCNT; // 72.578
+	ciclos_ASM = DWT->CYCCNT; /* Ciclos_ASM = 65264 */
 
 	DWT->CYCCNT = 0;
 	asm_eco_DSP(c_eco_signalIn, asm_DSP_eco_signalOut, c_eco_longitud);
-	ciclos_DSP = DWT->CYCCNT;	// 49.335
+	ciclos_DSP = DWT->CYCCNT; /* Ciclos_DSP = 43631 */
 
 	/* ----------- Función c_eco End ----------- */
 
